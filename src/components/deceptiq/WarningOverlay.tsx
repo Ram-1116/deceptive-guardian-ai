@@ -36,7 +36,7 @@ export function WarningOverlay({ r, onAction, lastAction, showOverlay }: {
           <div className="absolute inset-0 flex items-center justify-center bg-background/90 p-6 text-center">
             <div>
               <p className="font-display text-lg font-semibold">
-                {lastAction === "continue-anyway" ? "Override recorded" : lastAction === "go-back" ? "Returned to safety" : "Page closed"}
+                {lastAction === "continue-anyway" ? "Override recorded — no page was opened" : lastAction === "go-back" ? "Go Back recorded" : "Close Page recorded"}
               </p>
               <p className="mt-1 text-sm text-muted-foreground">Interactive warning simulation — recorded in the product preview, no real browser was navigated.</p>
             </div>
@@ -57,7 +57,7 @@ export function WarningOverlay({ r, onAction, lastAction, showOverlay }: {
               </ul>
               {confirming ? (
                 <div className="mt-5 rounded-lg border border-risk-elevated/40 bg-risk-elevated/10 p-3 text-sm">
-                  <p>Continue anyway? This override is recorded in the product preview only.</p>
+                  <p>Continue anyway? Your override will be recorded in this product preview. No real page will be opened and the submitted URL is never visited.</p>
                   <div className="mt-3 flex gap-2">
                     <Button size="sm" variant="destructive" onClick={() => { setConfirming(false); onAction("continue-anyway"); }}>Yes, record override</Button>
                     <Button size="sm" variant="ghost" onClick={() => setConfirming(false)}>Cancel</Button>

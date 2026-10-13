@@ -67,7 +67,8 @@ export function FactorsPanel({ r }: { r: AnalysisResult }) {
 export function IndicatorChecklist({ r }: { r: AnalysisResult }) {
   return (
     <section className="panel p-6">
-      <h3 className="mb-4 font-semibold">Indicator checklist</h3>
+      <h3 className="mb-1 font-semibold">Indicator checklist</h3>
+      <p className="mb-4 text-xs text-muted-foreground">{r.mode === "url-only" ? "Only the URL text was assessed. Page structure, visual similarity, forms, redirects and page wording were not inspected, so they add nothing to the score." : "Page signals below come from a fictional sample scenario, not a live website."}</p>
       <div className="grid gap-5 md:grid-cols-2">
         {GROUPS.map((g) => (
           <div key={g}>
