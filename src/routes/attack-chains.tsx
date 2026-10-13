@@ -26,10 +26,10 @@ const STAGES = [
 
 function Chains() {
   const [i, setI] = useState(0);
-  const s = STAGES[i];
+  const s = STAGES[i] ?? STAGES[0]!;
   return (
     <>
-      <PageHeader title="Attack chains" subtitle="Simulated example, not live telemetry. Step through how risk escalates and where DeceptIQ is designed to intervene." />
+      <PageHeader title="Attack chains" subtitle="Illustrative attack scenario, not live telemetry. Step through how risk escalates and where DeceptIQ is designed to intervene." />
       <ol className="grid gap-3 md:grid-cols-5">
         {STAGES.map((x, k) => (
           <li key={x.t}>

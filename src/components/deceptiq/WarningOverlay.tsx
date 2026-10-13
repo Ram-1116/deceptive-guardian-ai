@@ -38,7 +38,7 @@ export function WarningOverlay({ r, onAction, lastAction, showOverlay }: {
               <p className="font-display text-lg font-semibold">
                 {lastAction === "continue-anyway" ? "Override recorded" : lastAction === "go-back" ? "Returned to safety" : "Page closed"}
               </p>
-              <p className="mt-1 text-sm text-muted-foreground">Demo only — no real browser navigation occurred.</p>
+              <p className="mt-1 text-sm text-muted-foreground">Interactive warning simulation — recorded in the product preview, no real browser was navigated.</p>
             </div>
           </div>
         ) : (
@@ -57,7 +57,7 @@ export function WarningOverlay({ r, onAction, lastAction, showOverlay }: {
               </ul>
               {confirming ? (
                 <div className="mt-5 rounded-lg border border-risk-elevated/40 bg-risk-elevated/10 p-3 text-sm">
-                  <p>Continue anyway? This will be recorded as a demo override.</p>
+                  <p>Continue anyway? This override is recorded in the product preview only.</p>
                   <div className="mt-3 flex gap-2">
                     <Button size="sm" variant="destructive" onClick={() => { setConfirming(false); onAction("continue-anyway"); }}>Yes, record override</Button>
                     <Button size="sm" variant="ghost" onClick={() => setConfirming(false)}>Cancel</Button>
@@ -71,7 +71,7 @@ export function WarningOverlay({ r, onAction, lastAction, showOverlay }: {
                   <Button variant="ghost" className="text-muted-foreground" onClick={() => setConfirming(true)}>Continue Anyway</Button>
                 </div>
               )}
-              <p className="mt-4 text-[11px] text-muted-foreground">Demo analysis — not a verdict about the live website.</p>
+              <p className="mt-4 text-[11px] text-muted-foreground">Interactive warning simulation · not a verdict about the live website.</p>
             </div>
           </div>
         )}

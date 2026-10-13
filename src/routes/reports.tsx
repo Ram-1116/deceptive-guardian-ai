@@ -7,12 +7,12 @@ import { FullAnalysis } from "@/components/deceptiq/AnalysisView";
 import { ACTION_LABEL, useHistory } from "@/lib/store";
 
 export const Route = createFileRoute("/reports")({
-  validateSearch: (s: Record<string, unknown>) => ({ id: typeof s.id === "string" ? s.id : undefined }),
+  validateSearch: (s: Record<string, unknown>) => ({ id: typeof s["id"] === "string" ? s["id"] : undefined }),
   head: () => ({ meta: [
     { title: "Incident reports — DeceptIQ" },
     { name: "description", content: "Incident summary, evidence and risk breakdown with JSON and PDF export." },
     { property: "og:title", content: "Incident reports — DeceptIQ" },
-    { property: "og:description", content: "Exportable demo incident reports." },
+    { property: "og:description", content: "Exportable incident reports." },
   ] }),
   component: Reports,
 });
@@ -24,7 +24,7 @@ function Reports() {
 
   const download = () => {
     if (!e) return;
-    const data = { product: "DeceptIQ", team: "ThreatForge", disclaimer: "Demo analysis — not a verdict about the live website. No passwords, OTPs or form values collected.", incident: e };
+    const data = { product: "DeceptIQ", team: "ThreatForge", disclaimer: "This assessment uses the submitted URL and sample signals available in this prototype. It has not verified the live website. No passwords, OTPs or form values collected.", incident: e };
     const a = document.createElement("a");
     a.href = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)], { type: "application/json" }));
     a.download = `deceptiq-report-${e.result.hostname}.json`;
