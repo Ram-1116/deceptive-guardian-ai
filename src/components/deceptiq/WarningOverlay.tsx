@@ -9,7 +9,7 @@ import { BandChip } from "./Risk";
 export function WarningOverlay({ r, onAction, lastAction, showOverlay }: {
   r: AnalysisResult;
   onAction: (a: ActionType) => void;
-  lastAction?: ActionType;
+  lastAction?: ActionType | undefined;
   showOverlay: boolean;
 }) {
   const [confirming, setConfirming] = useState(false);
