@@ -33,7 +33,7 @@ function Reports() {
   };
 
   if (!ready) return null;
-  if (!e) return <p className="text-muted-foreground">No incidents yet. <Link to="/analyze" className="text-primary">Run an analysis</Link>.</p>;
+  if (!e) return <p className="text-muted-foreground">No incidents yet. <Link to="/analyze" search={{ sample: undefined }} className="text-primary">Run an analysis</Link>.</p>;
   return (
     <>
       <PageHeader title="Incident report" subtitle={`${e.result.hostname} · ${new Date(e.result.analyzedAt).toLocaleString()}`}
