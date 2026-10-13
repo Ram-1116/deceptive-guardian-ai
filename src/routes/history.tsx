@@ -11,9 +11,9 @@ import type { Band } from "@/lib/analysis";
 export const Route = createFileRoute("/history")({
   head: () => ({ meta: [
     { title: "History — DeceptIQ" },
-    { name: "description", content: "Local demo analysis history with sanitized URLs." },
+    { name: "description", content: "Local analysis history with sanitized URLs." },
     { property: "og:title", content: "History — DeceptIQ" },
-    { property: "og:description", content: "Local demo analysis history." },
+    { property: "og:description", content: "Local analysis history." },
   ] }),
   component: HistoryPage,
 });

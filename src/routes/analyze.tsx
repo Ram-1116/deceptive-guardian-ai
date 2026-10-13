@@ -11,12 +11,12 @@ import { analyzeUrl, SAMPLES, type AnalysisResult, type Sample } from "@/lib/ana
 import { addEntry, getSettings, recordAction, type ActionType } from "@/lib/store";
 
 export const Route = createFileRoute("/analyze")({
-  validateSearch: (s: Record<string, unknown>) => ({ sample: typeof s.sample === "string" ? s.sample : undefined }),
+  validateSearch: (s: Record<string, unknown>) => ({ sample: typeof s["sample"] === "string" ? s["sample"] : undefined }),
   head: () => ({ meta: [
     { title: "Analyze a URL — DeceptIQ" },
-    { name: "description", content: "Run a deterministic local demo analysis of a URL string." },
+    { name: "description", content: "Assess a URL for phishing and deception signals with explainable scoring." },
     { property: "og:title", content: "Analyze a URL — DeceptIQ" },
-    { property: "og:description", content: "Explainable demo deception analysis." },
+    { property: "og:description", content: "Explainable deception risk assessment." },
   ] }),
   component: Analyze,
 });
@@ -31,7 +31,7 @@ function Analyze() {
   const [last, setLast] = useState<ActionType>();
 
   const run = (u: string, s?: Sample) => {
-    if (!u.trim()) return toast.error("Enter a URL or pick an example");
+    if (!u.trim()) { toast.error("Enter a URL or pick an example"); return; }
     setLoading(true); setLast(undefined);
     setTimeout(() => {
       const r = analyzeUrl(u, s);
@@ -47,7 +47,7 @@ function Analyze() {
   const act = (a: ActionType) => {
     if (!res) return;
     recordAction(res.id, a); setLast(a);
-    const msg = { "go-back": "Returned to safety", "close-page": "Page closed", report: "Reported and saved to local history", "continue-anyway": "Demo override recorded — no real browser navigation occurred" }[a];
+    const msg = { "go-back": "Go Back recorded in the product preview — no real page was changed", "close-page": "Close Page recorded in the product preview", report: "Report saved to local history in this preview", "continue-anyway": "Override recorded in the product preview — no real browser navigation occurred" }[a];
     toast.success(msg);
     if (a === "go-back" || a === "close-page") setTimeout(() => navigate({ to: "/" }), 900);
   };
@@ -55,7 +55,7 @@ function Analyze() {
 
   return (
     <>
-      <PageHeader title="Analyze" subtitle="Analysis uses only the URL string, plus local fictional page signals for the built-in examples. Nothing is fetched or visited." />
+      <PageHeader title="Analyze" subtitle="Assess a link without opening it. DeceptIQ never fetches or visits the URL you enter." />
       <form className="panel space-y-4 p-6" onSubmit={(e) => { e.preventDefault(); run(url, sample?.url === url ? sample : undefined); }}>
         <label htmlFor="url" className="text-sm font-medium">URL to analyze</label>
         <div className="flex flex-col gap-2 sm:flex-row">

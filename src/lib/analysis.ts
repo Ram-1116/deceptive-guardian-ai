@@ -32,7 +32,7 @@ export interface Indicator {
   label: string;
   weight: number;
   triggered: boolean;
-  evidence?: string;
+  evidence?: string | undefined;
   available: boolean; // false when the signal cannot be observed (URL-only mode)
 }
 
@@ -64,7 +64,7 @@ export interface Sample {
 export interface AnalysisResult {
   input: string; // redacted URL
   hostname: string;
-  sampleId?: Sample["id"];
+  sampleId?: Sample["id"] | undefined;
   mode: "sample-signals" | "url-only";
   score: number;
   band: Band;
@@ -153,7 +153,7 @@ export function redactUrl(raw: string): { redacted: string; hostname: string } {
     const q = u.search ? "?[query removed]" : "";
     return { redacted: `${u.protocol}//${u.hostname}${path === "/" ? "" : path}${q}`, hostname: u.hostname };
   } catch {
-    const host = raw.replace(/^[a-z]+:\/\//i, "").split(/[/?#]/)[0].slice(0, 80);
+    const host = raw.replace(/^[a-z]+:\/\//i, "").split(/[/?#]/)[0]!.slice(0, 80);
     return { redacted: host || "[invalid url]", hostname: host || "unknown" };
   }
 }
@@ -192,7 +192,7 @@ export function analyzeUrl(raw: string, sample?: Sample, now = Date.now()): Anal
   const indicators: Indicator[] = [
     ind({ id: "no-tls", group: "URL / domain", label: "URL uses plain http://", weight: 8, triggered: url?.protocol === "http:", evidence: "Scheme is http, so data would not be encrypted in transit." }),
     ind({ id: "ip-host", group: "URL / domain", label: "Raw IP address as host", weight: 15, triggered: /^\d{1,3}(\.\d{1,3}){3}$/.test(host), evidence: `Host "${host}" is an IP address.` }),
-    ind({ id: "risky-tld", group: "URL / domain", label: "Top-level domain often abused", weight: 10, triggered: RISKY_TLDS.includes(tld), evidence: `TLD ".${tld}" appears on the demo's abuse-prone list.` }),
+    ind({ id: "risky-tld", group: "URL / domain", label: "Top-level domain often abused", weight: 10, triggered: RISKY_TLDS.includes(tld), evidence: `TLD ".${tld}" is on a list of TLDs frequently seen in phishing reports — a weak heuristic, not proof of malice.` }),
     ind({ id: "lookalike", group: "URL / domain", label: "Brand name on an unofficial domain", weight: 18, triggered: !!brand && !isOfficial, evidence: brand ? `Contains "${brand.token}" but registrable domain is "${registrable}", not ${brand.official}.` : undefined }),
     ind({ id: "homoglyph", group: "URL / domain", label: "Digit-for-letter substitution", weight: 12, triggered: deHomoglyph !== host && !!brand, evidence: "Characters like 0/1 replace o/l to imitate a brand." }),
     ind({ id: "punycode", group: "URL / domain", label: "Punycode (xn--) hostname", weight: 12, triggered: host.includes("xn--"), evidence: "Internationalised hostname may hide lookalike characters." }),
@@ -234,10 +234,10 @@ export function analyzeUrl(raw: string, sample?: Sample, now = Date.now()): Anal
     .filter((i) => i.strength > 0)
     .sort((a, b) => b.strength - a.strength);
 
-  const primaryIntent: Intent = band === "Low" || intents.length === 0 ? "No clear malicious intent" : intents[0].intent;
+  const primaryIntent: Intent = band === "Low" || intents.length === 0 ? "No clear malicious intent" : intents[0]!.intent;
 
   const recommendation = {
-    Low: "No strong deception signals in this demo analysis. Browse normally and stay alert before entering sensitive data.",
+    Low: "No strong deception signals found in this assessment. HTTPS alone does not prove a site is legitimate — Browse normally and stay alert before entering sensitive data.",
     Elevated: "Proceed with caution. Verify the domain by typing the official address yourself before signing in or paying.",
     High: "Do not enter credentials, OTPs or payment details. Leave the page and contact the organisation through an official channel.",
     Critical: "Leave this page now. Do not submit any information. Report it, and if you already entered data, change passwords and contact your bank.",

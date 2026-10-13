@@ -26,13 +26,13 @@ function SettingsPage() {
           <label className="flex items-center justify-between gap-4 text-sm">Save analyses to local history<Switch checked={s.persistHistory} onCheckedChange={(v) => update({ persistHistory: v })} /></label>
           <label className="flex items-center justify-between gap-4 text-sm">Quiet mode on safe pages<Switch checked={s.quietSafeMode} onCheckedChange={(v) => update({ quietSafeMode: v })} /></label>
           <label className="flex items-center justify-between gap-4 text-sm">Show warning overlay from Elevated (default High)<Switch checked={s.overlayThreshold === "Elevated"} onCheckedChange={(v) => update({ overlayThreshold: v ? "Elevated" : "High" })} /></label>
-          <Button variant="outline" onClick={() => { resetDemo(); toast.success("Demo data reset"); }}>Reset demo data</Button>
+          <Button variant="outline" onClick={() => { resetDemo(); toast.success("Local data reset to sample history"); }}>Reset local data</Button>
         </section>
         <section className="panel space-y-2 p-6 text-sm text-muted-foreground">
           <h3 className="font-semibold text-foreground">Prototype limitations</h3>
-          <p>Demo mode: results come from deterministic local rules and seeded fictional examples. No AI model, reputation, domain-age or certificate service is connected, and no accuracy or latency benchmark is claimed.</p>
+          <p><span className="mr-1 rounded-full border border-border px-2 py-0.5 text-xs">Prototype</span>Results come from deterministic local rules and seeded fictional examples. No AI model, reputation, domain-age or certificate service is connected, and no accuracy or latency benchmark is claimed.</p>
           <p>Entered URLs are never fetched or visited. Only the URL string is analyzed; page signals exist only for the built-in samples.</p>
-          <p>No real browser extension is installed by this demo; warning actions never navigate anywhere.</p>
+          <p>No real browser extension is installed by this prototype; warning actions never navigate anywhere.</p>
         </section>
         <section className="panel space-y-2 p-6 text-sm text-muted-foreground">
           <h3 className="font-semibold text-foreground">Privacy guardrails</h3>

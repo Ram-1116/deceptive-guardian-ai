@@ -1,5 +1,5 @@
 import { Link, Outlet } from "@tanstack/react-router";
-import { Activity, FileText, GitBranch, History, LayoutDashboard, ScanSearch, Settings } from "lucide-react";
+import { FileText, GitBranch, History, LayoutDashboard, ScanSearch, Settings } from "lucide-react";
 import { Wordmark } from "./Logo";
 
 const NAV = [
@@ -45,9 +45,6 @@ export function AppShell() {
             <p className="hidden text-sm text-muted-foreground lg:block">
               See beyond the link. Understand the deception. Stop the attack.
             </p>
-            <span className="inline-flex items-center gap-2 rounded-full border border-risk-elevated/40 bg-risk-elevated/10 px-3 py-1 text-xs font-medium text-risk-elevated">
-              <Activity className="size-3.5" /> Demo mode
-            </span>
           </div>
           <nav className="flex gap-1 overflow-x-auto px-3 pb-2 lg:hidden" aria-label="Main mobile">
             {NAV.map(({ to, label }) => (

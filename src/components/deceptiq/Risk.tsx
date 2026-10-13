@@ -55,10 +55,13 @@ export function Bar({ value, className }: { value: number; className?: string })
   );
 }
 
-export function DemoNote({ children }: { children?: React.ReactNode }) {
+export function DemoNote({ mode }: { mode: "sample-signals" | "url-only" }) {
   return (
-    <p className="text-xs text-muted-foreground">
-      <span className="font-medium text-risk-elevated">Demo analysis</span> — {children ?? "not a verdict about the live website."}
-    </p>
+    <div className="space-y-1 text-xs text-muted-foreground">
+      <span className="inline-flex rounded-full border border-border px-2 py-0.5 font-medium text-foreground">
+        {mode === "url-only" ? "URL-only assessment · page content not inspected" : "Illustrative sample · fictional website"}
+      </span>
+      <p>This assessment uses the URL you entered and the sample signals available in this prototype. It has not verified the live website.</p>
+    </div>
   );
 }

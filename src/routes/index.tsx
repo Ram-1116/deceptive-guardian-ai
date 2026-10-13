@@ -10,9 +10,9 @@ export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
       { title: "Overview — DeceptIQ" },
-      { name: "description", content: "DeceptIQ demo security overview: analyses, findings and attack chains." },
+      { name: "description", content: "DeceptIQ security overview: analyses, findings and attack chains." },
       { property: "og:title", content: "Overview — DeceptIQ" },
-      { property: "og:description", content: "DeceptIQ demo security overview." },
+      { property: "og:description", content: "DeceptIQ security overview." },
     ],
   }),
   component: Overview,
@@ -29,10 +29,10 @@ function Overview() {
   const chains = list.filter((e) => e.result.sampleId === "otp-scam" || e.result.sampleId === "login-clone").length;
   return (
     <>
-      <PageHeader title="Security overview" subtitle="Demo workspace for DeceptIQ by ThreatForge. Metrics come from your local demo history."
-        actions={<Button asChild><Link to="/analyze"><ScanSearch /> Analyze URL</Link></Button>} />
+      <PageHeader title="Security overview" subtitle="Activity from analyses run in this browser. The weekly chart uses illustrative sample data."
+        actions={<Button asChild><Link to="/analyze" search={{ sample: undefined }}><ScanSearch /> Analyze URL</Link></Button>} />
       <div className="grid gap-4 sm:grid-cols-3">
-        {[["Sessions analyzed (demo)", list.length], ["High / Critical findings", flagged], ["Active demo attack chains", chains]].map(([l, v]) => (
+        {[["URLs analyzed", list.length], ["High / Critical findings", flagged], ["Sample attack chains reviewed", chains]].map(([l, v]) => (
           <div key={l} className="panel p-5"><div className="text-xs text-muted-foreground">{l}</div><div className="font-display text-3xl font-semibold tabular-nums">{v}</div></div>
         ))}
       </div>

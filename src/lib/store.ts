@@ -108,5 +108,5 @@ export const ACTION_LABEL: Record<ActionType, string> = {
   "go-back": "Went back to safety",
   "close-page": "Closed page",
   report: "Reported",
-  "continue-anyway": "Continued anyway (demo override)",
+  "continue-anyway": "Continued anyway (override recorded)",
 };

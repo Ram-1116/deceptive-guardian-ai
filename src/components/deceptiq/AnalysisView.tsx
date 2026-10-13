@@ -21,12 +21,12 @@ export function ScoreSummary({ r }: { r: AnalysisResult }) {
         <div className="grid gap-3 sm:grid-cols-3">
           <Stat label="Technical signals" value={`${r.technical} / 70`} />
           <Stat label="Manipulation score" value={`${r.manipulation} / 100`} hint="weighted ×0.3" />
-          <Stat label="Confidence (illustrative)" value={`${Math.round(r.confidence * 100)}%`} hint={r.mode === "url-only" ? "URL string only — page not inspected" : "URL + local sample page signals"} />
+          <Stat label="Confidence (illustrative)" value={`${Math.round(r.confidence * 100)}%`} hint={r.mode === "url-only" ? "URL string only — page not inspected" : "URL + fictional sample page signals"} />
         </div>
         <p className="font-mono text-xs text-muted-foreground">
           risk = min(100, {r.technical} + 0.3 × {r.manipulation}) = {r.score}
         </p>
-        <DemoNote />
+        <DemoNote mode={r.mode} />
       </div>
     </section>
   );
@@ -80,7 +80,7 @@ export function IndicatorChecklist({ r }: { r: AnalysisResult }) {
                     : <CheckCircle2 className="mt-0.5 size-4 shrink-0 text-risk-low" />}
                   <span className={cn(!i.available && "text-muted-foreground")}>
                     {i.label}
-                    <span className="ml-1 font-mono text-[11px] text-muted-foreground">{!i.available ? "n/a in URL-only mode" : i.triggered ? `+${i.weight}` : "clear"}</span>
+                    <span className="ml-1 font-mono text-[11px] text-muted-foreground">{!i.available ? "Not inspected in URL-only assessment" : i.triggered ? `+${i.weight}` : "clear"}</span>
                   </span>
                 </li>
               ))}
@@ -99,7 +99,7 @@ export function EvidencePanel({ r }: { r: AnalysisResult }) {
       <h3 className="mb-1 font-semibold">Why risky?</h3>
       <p className="mb-4 text-xs text-muted-foreground">Every point in the score traces to one of these items.</p>
       {hits.length === 0 && r.manipulation === 0 ? (
-        <p className="flex items-center gap-2 text-sm text-risk-low"><CheckCircle2 className="size-4" /> No deception evidence found in this demo analysis.</p>
+        <p className="flex items-center gap-2 text-sm text-risk-low"><CheckCircle2 className="size-4" /> No deception evidence found in this assessment.</p>
       ) : (
         <ul className="space-y-3">
           {hits.map((i) => (
