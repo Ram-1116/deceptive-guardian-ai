@@ -123,7 +123,7 @@
 @utility animate-scan { animation: scan 1.4s linear infinite; }
 
 @media print {
-  :root {
+  :root, :root.dark {
     --background: oklch(1 0 0); --foreground: oklch(0.15 0 0); --card: oklch(1 0 0);
     --card-foreground: oklch(0.15 0 0); --muted-foreground: oklch(0.4 0 0); --border: oklch(0.8 0 0);
     --muted: oklch(0.96 0 0); --surface: oklch(1 0 0); --secondary: oklch(0.95 0 0);
