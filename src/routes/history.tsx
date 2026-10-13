@@ -26,10 +26,10 @@ function HistoryPage() {
   return (
     <>
       <PageHeader title="History" subtitle="Stored only in this browser. Query strings and token-like path segments are removed before saving."
-        actions={<Button variant="outline" onClick={() => { clearHistory(); toast.success("History cleared"); }}>Clear history</Button>} />
+        actions={<Button variant="outline" onClick={() => { if (window.confirm("Clear all saved analyses from this browser?")) { clearHistory(); toast.success("History cleared"); } }}>Clear history</Button>} />
       <div className="mb-4 flex flex-col gap-2 sm:flex-row">
-        <Input placeholder="Search hostname" value={q} onChange={(e) => setQ(e.target.value)} aria-label="Search history" />
-        <div className="flex gap-1">
+        <Input placeholder="Search URL or hostname" value={q} onChange={(e) => setQ(e.target.value)} aria-label="Search history" />
+        <div className="flex flex-wrap gap-1">
           {(["All", "Low", "Elevated", "High", "Critical"] as const).map((b) => (
             <Button key={b} size="sm" variant={band === b ? "default" : "outline"} onClick={() => setBand(b)}>{b}</Button>
           ))}
@@ -46,7 +46,7 @@ function HistoryPage() {
                 {e.actions.length > 0 && ` · ${e.actions.map((a) => ACTION_LABEL[a.type]).join(", ")}`}
               </div>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2">
               <span className="tabular-nums">{e.result.score}</span><BandChip band={e.result.band} />
               <Button size="sm" variant="outline" asChild><Link to="/reports" search={{ id: e.id }}>Details</Link></Button>
               {e.result.sampleId && <Button size="sm" variant="outline" asChild><Link to="/analyze" search={{ sample: e.result.sampleId }}>Re-run</Link></Button>}

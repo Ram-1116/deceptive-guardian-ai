@@ -32,7 +32,7 @@ function SettingsPage() {
           <h3 className="font-semibold text-foreground">Prototype limitations</h3>
           <p><span className="mr-1 rounded-full border border-border px-2 py-0.5 text-xs">Prototype</span>Results come from deterministic local rules and seeded fictional examples. No AI model, reputation, domain-age or certificate service is connected, and no accuracy or latency benchmark is claimed.</p>
           <p>Entered URLs are never fetched or visited. Only the URL string is analyzed; page signals exist only for the built-in samples.</p>
-          <p>No real browser extension is installed by this prototype; warning actions never navigate anywhere.</p>
+          <p>This hosted web app is a product preview, not yet a browser-installed extension. It does not monitor or protect your open browser tabs, and warning actions only record your choice here — they never navigate anywhere.</p>
         </section>
         <section className="panel space-y-2 p-6 text-sm text-muted-foreground">
           <h3 className="font-semibold text-foreground">Privacy guardrails</h3>

@@ -47,9 +47,8 @@ function Analyze() {
   const act = (a: ActionType) => {
     if (!res) return;
     recordAction(res.id, a); setLast(a);
-    const msg = { "go-back": "Go Back recorded in the product preview — no real page was changed", "close-page": "Close Page recorded in the product preview", report: "Report saved to local history in this preview", "continue-anyway": "Override recorded in the product preview — no real browser navigation occurred" }[a];
+    const msg = { "go-back": "Go Back recorded in the product preview — no real page was changed", "close-page": "Close Page recorded in the product preview", report: getSettings().persistHistory ? "Report saved to local history in this preview" : "Report recorded for this session (history saving is off)", "continue-anyway": "Override recorded in the product preview — no real browser navigation occurred" }[a];
     toast.success(msg);
-    if (a === "go-back" || a === "close-page") setTimeout(() => navigate({ to: "/" }), 900);
   };
   const threshold = getSettings().overlayThreshold === "Elevated" ? 30 : 55;
 
