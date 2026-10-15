@@ -9,6 +9,8 @@ import { useHistory } from "@/lib/store";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
+    { property: "og:type", content: "website" },
+    { name: "twitter:card", content: "summary_large_image" },
       { title: "Overview — DeceptIQ" },
       { name: "description", content: "DeceptIQ security overview: analyses, findings and attack chains." },
       { property: "og:title", content: "Overview — DeceptIQ" },
@@ -29,15 +31,16 @@ function Overview() {
   const chains = list.filter((e) => e.result.sampleId === "otp-scam" || e.result.sampleId === "login-clone").length;
   return (
     <>
-      <PageHeader title="Security overview" subtitle="Activity from analyses run in this browser. The weekly chart uses illustrative sample data."
+      <PageHeader title="DeceptIQ security overview" subtitle="Web analysis/dashboard prototype by ThreatForge. Local URL rules and defined sample signals—not live browser monitoring."
         actions={<Button asChild><Link to="/analyze" search={{ sample: undefined }}><ScanSearch /> Analyze URL</Link></Button>} />
+      <section className="mb-6 border-y border-border py-4"><h2 className="text-sm font-semibold">Browser extension · planned separately</h2><p className="mt-1 text-sm text-muted-foreground">The intended Chrome/Chromium Manifest V3 extension would supply page signals. This web app is not installed in your browser, does not watch open tabs, and cannot block input.</p><Button asChild variant="link" className="mt-2 px-0"><Link to="/settings">View signal coverage & privacy</Link></Button></section>
       <div className="grid gap-4 sm:grid-cols-3">
-        {[["URLs analyzed", list.length], ["High / Critical findings", flagged], ["Sample attack chains reviewed", chains]].map(([l, v]) => (
+        {[["Saved assessments (includes samples)", list.length], ["High / Critical findings", flagged], ["Illustrative scenario assessments", chains]].map(([l, v]) => (
           <div key={l} className="panel p-5"><div className="text-xs text-muted-foreground">{l}</div><div className="font-display text-3xl font-semibold tabular-nums">{v}</div></div>
         ))}
       </div>
       <section className="panel mt-6 p-6">
-        <div className="mb-4 flex items-center justify-between"><h3 className="font-semibold">Weekly page checks</h3><span className="text-xs text-risk-elevated">Sample data — illustrative only</span></div>
+        <div className="mb-4 flex items-center justify-between"><h3 className="font-semibold">Illustrative weekly assessments</h3><span className="text-xs text-risk-elevated">Sample data — illustrative only</span></div>
         <div className="h-56">
           <ResponsiveContainer>
             <AreaChart data={SAMPLE_CHART}>
@@ -53,6 +56,7 @@ function Overview() {
       </section>
       <section className="panel mt-6 p-6">
         <h3 className="mb-4 font-semibold">Recent analyses</h3>
+        {list.length === 0 && <p className="text-sm text-muted-foreground">No saved assessments. Analyze a URL to get started.</p>}
         <ul className="divide-y divide-border">
           {list.slice(0, 5).map((e) => (
             <li key={e.id} className="flex items-center justify-between gap-3 py-3 text-sm">

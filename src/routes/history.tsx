@@ -10,6 +10,8 @@ import type { Band } from "@/lib/analysis";
 
 export const Route = createFileRoute("/history")({
   head: () => ({ meta: [
+    { property: "og:type", content: "website" },
+    { name: "twitter:card", content: "summary_large_image" },
     { title: "History — DeceptIQ" },
     { name: "description", content: "Local analysis history with sanitized URLs." },
     { property: "og:title", content: "History — DeceptIQ" },
@@ -25,7 +27,7 @@ function HistoryPage() {
   const rows = list.filter((e) => (band === "All" || e.result.band === band) && e.result.input.toLowerCase().includes(q.toLowerCase()));
   return (
     <>
-      <PageHeader title="History" subtitle="Stored only in this browser. Query strings and token-like path segments are removed before saving."
+      <PageHeader title="History" subtitle="Stored only in this browser. Query strings, fragments, credentials and token-like path segments are removed before saving."
         actions={<Button variant="outline" onClick={() => { if (window.confirm("Clear all saved analyses from this browser?")) { clearHistory(); toast.success("History cleared"); } }}>Clear history</Button>} />
       <div className="mb-4 flex flex-col gap-2 sm:flex-row">
         <Input placeholder="Search URL or hostname" value={q} onChange={(e) => setQ(e.target.value)} aria-label="Search history" />
@@ -42,7 +44,7 @@ function HistoryPage() {
             <div className="min-w-0">
               <div className="truncate font-mono text-sm">{e.result.input}</div>
               <div className="text-xs text-muted-foreground">
-                {new Date(e.result.analyzedAt).toLocaleString()} · {e.result.primaryIntent}{e.seeded && " · sample data"}
+                {new Date(e.result.analyzedAt).toLocaleString()} · {e.result.primaryIntent}{e.result.mode === "sample-signals" && " · illustrative sample"}
                 {e.actions.length > 0 && ` · ${e.actions.map((a) => ACTION_LABEL[a.type]).join(", ")}`}
               </div>
             </div>
@@ -50,7 +52,7 @@ function HistoryPage() {
               <span className="tabular-nums">{e.result.score}</span><BandChip band={e.result.band} />
               <Button size="sm" variant="outline" asChild><Link to="/reports" search={{ id: e.id }}>Details</Link></Button>
               {e.result.sampleId && <Button size="sm" variant="outline" asChild><Link to="/analyze" search={{ sample: e.result.sampleId }}>Re-run</Link></Button>}
-              <Button size="sm" variant="ghost" onClick={() => { deleteEntry(e.id); toast("Entry deleted"); }}>Delete</Button>
+              <Button size="sm" variant="ghost" onClick={() => { if (window.confirm("Permanently delete this saved analysis?")) { try { deleteEntry(e.id); toast("Entry deleted"); } catch { toast.error("Could not delete entry"); } } }}>Delete</Button>
             </div>
           </div>
         ))}
