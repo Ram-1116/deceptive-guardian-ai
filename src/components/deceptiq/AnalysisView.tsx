@@ -1,9 +1,9 @@
 import { AlertTriangle, CheckCircle2, CircleDashed, Info, XCircle } from "lucide-react";
-import type { AnalysisResult, IndicatorGroup } from "@/lib/analysis";
+import type { AnalysisResult } from "@/lib/analysis";
 import { BAND_BG, BAND_TEXT, BandChip, Bar, DemoNote, ScoreRing } from "./Risk";
 import { cn } from "@/lib/utils";
 
-const GROUPS: IndicatorGroup[] = ["URL / domain", "Forms & redirects", "Page structure (DOM)", "Visual similarity"];
+
 
 export function ScoreSummary({ r }: { r: AnalysisResult }) {
   return (
@@ -15,13 +15,13 @@ export function ScoreSummary({ r }: { r: AnalysisResult }) {
           <span className="font-mono text-sm text-muted-foreground break-all">{r.input}</span>
         </div>
         <div>
-          <div className="text-xs uppercase tracking-wider text-muted-foreground">Likely intent</div>
+          <div className="text-xs uppercase tracking-wider text-muted-foreground">Possible intent · rule-based hypothesis</div>
           <div className={cn("font-display text-xl font-semibold", BAND_TEXT[r.band])}>{r.primaryIntent}</div>
         </div>
         <div className="grid gap-3 sm:grid-cols-3">
           <Stat label="Technical signals" value={`${r.technical} / 70`} />
           <Stat label="Manipulation score" value={`${r.manipulation} / 100`} hint="weighted ×0.3" />
-          <Stat label="Confidence (illustrative)" value={`${Math.round(r.confidence * 100)}%`} hint={r.mode === "url-only" ? "URL string only — page not inspected" : "URL + fictional sample page signals"} />
+          <Stat label="Assessment coverage" value={r.mode === "url-only" ? "URL only" : "Sample inputs"} hint="Indicative rule score · not a probability" />
         </div>
         <p className="font-mono text-xs text-muted-foreground">
           risk = min(100, {r.technical} + 0.3 × {r.manipulation}) = {r.score}
@@ -46,12 +46,12 @@ export function FactorsPanel({ r }: { r: AnalysisResult }) {
   return (
     <section className="panel p-6">
       <h3 className="font-semibold">Manipulation factors</h3>
-      <p className="mb-4 text-xs text-muted-foreground">Keyword cues in {r.mode === "url-only" ? "the URL tokens" : "the sample's visible text"}; 34 points per cue, capped at 100.</p>
+      <p className="mb-4 text-xs text-muted-foreground">Defined sample text cues; 34 points per cue, capped at 100. Page text is not inspected for entered URLs.</p>
       <div className="space-y-4">
         {r.factors.map((f) => (
           <div key={f.key}>
-            <div className="mb-1 flex justify-between text-sm"><span>{f.label}</span><span className="tabular-nums text-muted-foreground">{f.score}</span></div>
-            <Bar value={f.score} />
+            <div className="mb-1 flex justify-between text-sm"><span>{f.label}</span><span className="tabular-nums text-muted-foreground">{f.available ? f.score : "Not inspected"}</span></div>
+            {f.available && <Bar value={f.score} />}
             {f.matches.length > 0 && (
               <div className="mt-1.5 flex flex-wrap gap-1">
                 {f.matches.map((m) => <span key={m} className="rounded bg-muted px-1.5 py-0.5 font-mono text-[11px] text-muted-foreground">"{m}"</span>)}
@@ -69,38 +69,33 @@ export function IndicatorChecklist({ r }: { r: AnalysisResult }) {
     <section className="panel p-6">
       <h3 className="mb-1 font-semibold">Indicator checklist</h3>
       <p className="mb-4 text-xs text-muted-foreground">{r.mode === "url-only" ? "Only the URL text was assessed. Page structure, visual similarity, forms, redirects and page wording were not inspected, so they add nothing to the score." : "Page signals below come from a fictional sample scenario, not a live website."}</p>
-      <div className="grid gap-5 md:grid-cols-2">
-        {GROUPS.map((g) => (
-          <div key={g}>
-            <div className="mb-2 text-xs uppercase tracking-wider text-muted-foreground">{g}</div>
-            <ul className="space-y-1.5">
-              {r.indicators.filter((i) => i.group === g).map((i) => (
-                <li key={i.id} className="flex items-start gap-2 text-sm">
-                  {!i.available ? <CircleDashed className="mt-0.5 size-4 shrink-0 text-muted-foreground" />
-                    : i.triggered ? <XCircle className="mt-0.5 size-4 shrink-0 text-risk-critical" />
-                    : <CheckCircle2 className="mt-0.5 size-4 shrink-0 text-risk-low" />}
-                  <span className={cn(!i.available && "text-muted-foreground")}>
-                    {i.label}
-                    <span className="ml-1 font-mono text-[11px] text-muted-foreground">{!i.available ? "Not inspected in URL-only assessment" : i.triggered ? `+${i.weight}` : "clear"}</span>
-                  </span>
-                </li>
-              ))}
-            </ul>
-          </div>
-        ))}
+      <div className="grid gap-6 md:grid-cols-2">
+        <div><h4 className="mb-3 text-sm font-medium text-primary">{r.mode === "url-only" ? "Observed signals" : "Available signals · illustrative scenario"}</h4>
+          <ul className="space-y-3">{r.indicators.filter((i) => i.available).map((i) => <li key={i.id} className="flex gap-2 text-sm">
+            {i.triggered ? <XCircle className="mt-0.5 size-4 shrink-0 text-risk-high" /> : <CheckCircle2 className="mt-0.5 size-4 shrink-0 text-muted-foreground" />}
+            <div>{i.label}<div className="text-xs text-muted-foreground">{i.group} · {i.basis === "observed" ? "Observed input" : "Heuristic"} · {i.triggered ? `matched (+${i.weight})` : "not matched (0 points)"}</div></div>
+          </li>)}</ul>
+          <p className="mt-3 text-xs text-muted-foreground">Not matched is not a guarantee of safety. Heuristics interpret available input; they are not verified threats.</p>
+        </div>
+        <div><h4 className="mb-3 text-sm font-medium text-muted-foreground">Not inspected / unavailable signals</h4>
+          <ul className="space-y-3">{r.indicators.filter((i) => !i.available).map((i) => <li key={i.id} className="flex gap-2 text-sm text-muted-foreground"><CircleDashed className="mt-0.5 size-4 shrink-0" /><div>{i.label}<div className="text-xs">{i.group} · unavailable · no score contribution</div></div></li>)}
+            {!r.factors.some((f) => f.available) && <li className="flex gap-2 text-sm text-muted-foreground"><CircleDashed className="mt-0.5 size-4 shrink-0" />Visible page text and manipulation cues · not inspected</li>}
+            <li className="flex gap-2 text-sm text-muted-foreground"><CircleDashed className="mt-0.5 size-4 shrink-0" />External reputation, domain age and certificate verification · not connected</li>
+          </ul>
+        </div>
       </div>
     </section>
   );
 }
 
 export function EvidencePanel({ r }: { r: AnalysisResult }) {
-  const hits = r.indicators.filter((i) => i.triggered);
+  const hits = r.indicators.filter((i) => i.available && i.triggered);
   return (
     <section className="panel p-6">
       <h3 className="mb-1 font-semibold">Why risky?</h3>
-      <p className="mb-4 text-xs text-muted-foreground">Every point in the score traces to one of these items.</p>
+      <p className="mb-4 text-xs text-muted-foreground">Rule contributions below are indicative, not severity probabilities. Technical weights are capped at 70; text contribution is weighted ×0.3.</p>
       {hits.length === 0 && r.manipulation === 0 ? (
-        <p className="flex items-center gap-2 text-sm text-risk-low"><CheckCircle2 className="size-4" /> No deception evidence found in this assessment.</p>
+        <p className="flex items-center gap-2 text-sm text-risk-low"><CheckCircle2 className="size-4" /> No rules matched the available signals; uninspected signals remain unknown.</p>
       ) : (
         <ul className="space-y-3">
           {hits.map((i) => (
@@ -108,7 +103,7 @@ export function EvidencePanel({ r }: { r: AnalysisResult }) {
               <div className="flex items-center justify-between gap-2 text-sm font-medium">
                 <span>{i.label}</span><span className="font-mono text-xs text-risk-critical">+{i.weight}</span>
               </div>
-              <p className="mt-1 text-xs text-muted-foreground">{i.evidence}</p>
+              <p className="mt-1 text-xs text-primary">Source: {i.source} · {i.group} · {i.basis === "observed" ? "Observed input" : "Heuristic interpretation"}</p><p className="mt-1 break-words text-xs text-muted-foreground">{i.evidence}</p>
             </li>
           ))}
           {r.manipulation > 0 && (
@@ -127,7 +122,7 @@ export function EvidencePanel({ r }: { r: AnalysisResult }) {
 export function IntentPanel({ r }: { r: AnalysisResult }) {
   return (
     <section className="panel p-6">
-      <h3 className="mb-4 font-semibold">Likely intent categories</h3>
+      <h3 className="mb-2 font-semibold">Possible intent categories</h3><p className="mb-4 text-xs text-muted-foreground">Relative rule strengths, not model confidence or a verified intent.</p>
       {r.intents.length === 0 ? <p className="text-sm text-muted-foreground">No intent category matched.</p> : (
         <div className="space-y-3">
           {r.intents.map((i) => (

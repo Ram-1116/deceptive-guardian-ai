@@ -61,7 +61,7 @@ export function DemoNote({ mode }: { mode: "sample-signals" | "url-only" }) {
       <span className="inline-flex rounded-full border border-border px-2 py-0.5 font-medium text-foreground">
         {mode === "url-only" ? "URL-only assessment · page content not inspected" : "Illustrative sample · fictional website"}
       </span>
-      <p>This assessment uses the URL you entered and the sample signals available in this prototype. It has not verified the live website.</p>
+      <p>Indicative prototype score, not a live-site verdict. Entering a URL never visits or fetches the site. Sample page signals are fictional, locally defined inputs.</p>
     </div>
   );
 }
