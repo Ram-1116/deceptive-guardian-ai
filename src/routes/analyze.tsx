@@ -14,6 +14,8 @@ import { addEntry, getSettings, recordAction, useSettings, type ActionType } fro
 export const Route = createFileRoute("/analyze")({
   validateSearch: (s: Record<string, unknown>) => ({ sample: typeof s["sample"] === "string" ? s["sample"] : undefined }),
   head: () => ({ meta: [
+    { property: "og:type", content: "website" },
+    { name: "twitter:card", content: "summary_large_image" },
     { title: "Analyze a URL — DeceptIQ" },
     { name: "description", content: "Assess a URL for phishing and deception signals with explainable scoring." },
     { property: "og:title", content: "Analyze a URL — DeceptIQ" },
