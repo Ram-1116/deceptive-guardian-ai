@@ -104,10 +104,9 @@ export const SAMPLES: Sample[] = [
     label: "Suspicious login clone",
     url: "http://n0vapay-secure-verify.account-check.top/signin",
     page: {
-      passwordFieldCrossOrigin: "", otpField: false, cardField: false, redirectChain: [], obfuscatedScript: false,
       visibleText:
         "Your NovaPay account has been suspended due to unusual activity. Verify your identity within 24 hours or your account will be permanently locked. NovaPay Security Team. Enter your password to continue.",
-      passwordFieldCrossOrigin: "collect-form.xyz",
+      passwordFieldCrossOrigin: "collect-form.xyz", otpField: false, cardField: false,
       redirectChain: ["link.short.example", "account-check.top"],
       visualSimilarity: { brand: "NovaPay", similarity: 0.93 },
       obfuscatedScript: true,
@@ -118,9 +117,9 @@ export const SAMPLES: Sample[] = [
     label: "OTP / payment scam",
     url: "https://bharatunity-reward-kyc.claim-now.xyz/otp",
     page: {
-      passwordFieldCrossOrigin: "", otpField: false, cardField: false, redirectChain: [], obfuscatedScript: false,
       visibleText:
         "Congratulations! You have won a cashback reward of Rs 5,000. Your KYC is pending. Enter the OTP sent to your mobile and your card number to claim within 10 minutes, otherwise the reward expires. Authorised by the Bank Compliance Department.",
+      passwordFieldCrossOrigin: "", obfuscatedScript: false,
       otpField: true,
       cardField: true,
       redirectChain: ["sms-link.example", "claim-now.xyz"],
