@@ -34,7 +34,7 @@ export function AppShell() {
         <div className="m-3 rounded-lg border border-sidebar-border p-3 text-xs text-muted-foreground">
           <div className="mb-1 font-medium text-foreground">HACKINDIA AI & CyberTech 2026</div>
           In association with KIT Kanpur
-          <div className="mt-1 font-mono">ID HI023039</div>
+          <div className="mt-1 font-mono">ThreatForge</div>
         </div>
       </aside>
 
