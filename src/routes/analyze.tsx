@@ -12,7 +12,10 @@ import { analyzeUrl, isValidUrl, redactUrl, SAMPLES, type AnalysisResult, type S
 import { addEntry, getSettings, recordAction, useSettings, type ActionType } from "@/lib/store";
 
 export const Route = createFileRoute("/analyze")({
-  validateSearch: (s: Record<string, unknown>) => ({ sample: typeof s["sample"] === "string" ? s["sample"] : undefined }),
+  validateSearch: (s: Record<string, unknown>) => ({
+    sample: typeof s["sample"] === "string" ? s["sample"] : undefined,
+    url: typeof s["url"] === "string" ? s["url"] : undefined,
+  }),
   head: () => ({ meta: [
     { property: "og:type", content: "website" },
     { name: "twitter:card", content: "summary_large_image" },
@@ -25,7 +28,7 @@ export const Route = createFileRoute("/analyze")({
 });
 
 function Analyze() {
-  const { sample: initial } = Route.useSearch();
+  const { sample: initial, url: initialUrl } = Route.useSearch();
   const [settings] = useSettings();
   const timer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const [error, setError] = useState("");
