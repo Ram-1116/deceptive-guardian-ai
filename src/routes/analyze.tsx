@@ -57,8 +57,9 @@ function Analyze() {
   useEffect(() => {
     const s = SAMPLES.find((x) => x.id === initial);
     if (s) { setUrl(s.url); setSample(s); run(s.url, s); }
+    else if (initialUrl && isValidUrl(initialUrl)) { setUrl(initialUrl); setSample(undefined); run(initialUrl); }
     return () => clearTimeout(timer.current);
-  }, [initial]);
+  }, [initial, initialUrl]);
 
   const act = (a: ActionType) => {
     if (!res) return;

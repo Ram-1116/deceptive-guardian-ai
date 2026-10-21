@@ -44,7 +44,7 @@ function HistoryPage() {
             <div className="min-w-0">
               <div className="truncate font-mono text-sm">{e.result.input}</div>
               <div className="text-xs text-muted-foreground">
-                {new Date(e.result.analyzedAt).toLocaleString()} · {e.result.primaryIntent}{e.result.mode === "sample-signals" && " · illustrative sample"}
+                {new Date(e.result.analyzedAt).toLocaleString()} · {e.result.primaryIntent} · {e.result.mode === "sample-signals" ? "illustrative sample" : "URL-only"}
                 {e.actions.length > 0 && ` · ${e.actions.map((a) => ACTION_LABEL[a.type]).join(", ")}`}
               </div>
             </div>
