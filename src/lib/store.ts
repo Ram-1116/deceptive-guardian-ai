@@ -15,20 +15,15 @@ const EVT = "deceptiq:history";
 function read(): HistoryEntry[] {
   try {
     const raw = localStorage.getItem(KEY);
-    if (raw === null) {
-      const now = Date.now();
-      const seed: HistoryEntry[] = [
-        { id: "seed-3", result: analyzeSample("otp-scam", now - 3600_000 * 5), actions: [{ type: "report", ts: now - 3600_000 * 5 }], seeded: true },
-        { id: "seed-2", result: analyzeSample("login-clone", now - 3600_000 * 26), actions: [{ type: "go-back", ts: now - 3600_000 * 26 }], seeded: true },
-        { id: "seed-1", result: analyzeSample("safe", now - 3600_000 * 50), actions: [], seeded: true },
-      ];
-      localStorage.setItem(KEY, JSON.stringify(seed));
-      return seed;
-    }
+    // No auto-seeding: a fresh store starts empty. Samples only enter
+    // history after the user explicitly runs a sample scenario.
+    if (raw === null) return [];
     const parsed: unknown = JSON.parse(raw);
     if (!Array.isArray(parsed)) return [];
     const entries = parsed.flatMap((entry): HistoryEntry[] => {
       if (!entry || typeof entry !== "object" || typeof entry.id !== "string" || !entry.result || typeof entry.result.input !== "string" || !Array.isArray(entry.result.indicators) || !Array.isArray(entry.result.factors) || !Array.isArray(entry.result.intents) || !Number.isFinite(entry.result.analyzedAt)) return [];
+      // Migrate legacy installs: drop auto-seeded entries, keep genuine ones.
+      if (entry.seeded === true || /^seed-\d+$/.test(entry.id)) return [];
       const { confidence: _confidence, ...result } = entry.result;
       const sanitized = redactUrl(result.input);
       const refreshed = result.sampleId ? analyzeSample(result.sampleId, result.analyzedAt) : {
