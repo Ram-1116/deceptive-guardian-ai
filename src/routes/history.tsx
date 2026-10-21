@@ -51,7 +51,9 @@ function HistoryPage() {
             <div className="flex flex-wrap items-center gap-2">
               <span className="tabular-nums">{e.result.score}</span><BandChip band={e.result.band} />
               <Button size="sm" variant="outline" asChild><Link to="/reports" search={{ id: e.id }}>Details</Link></Button>
-              {e.result.sampleId && <Button size="sm" variant="outline" asChild><Link to="/analyze" search={{ sample: e.result.sampleId }}>Re-run</Link></Button>}
+              <Button size="sm" variant="outline" asChild>
+                <Link to="/analyze" search={e.result.sampleId ? { sample: e.result.sampleId, url: undefined } : { sample: undefined, url: e.result.input }}>Re-run</Link>
+              </Button>
               <Button size="sm" variant="ghost" onClick={() => { if (window.confirm("Permanently delete this saved analysis?")) { try { deleteEntry(e.id); toast("Entry deleted"); } catch { toast.error("Could not delete entry"); } } }}>Delete</Button>
             </div>
           </div>
