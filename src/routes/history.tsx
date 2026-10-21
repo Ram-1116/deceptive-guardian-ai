@@ -44,14 +44,16 @@ function HistoryPage() {
             <div className="min-w-0">
               <div className="truncate font-mono text-sm">{e.result.input}</div>
               <div className="text-xs text-muted-foreground">
-                {new Date(e.result.analyzedAt).toLocaleString()} · {e.result.primaryIntent}{e.result.mode === "sample-signals" && " · illustrative sample"}
+                {new Date(e.result.analyzedAt).toLocaleString()} · {e.result.primaryIntent} · {e.result.mode === "sample-signals" ? "illustrative sample" : "URL-only"}
                 {e.actions.length > 0 && ` · ${e.actions.map((a) => ACTION_LABEL[a.type]).join(", ")}`}
               </div>
             </div>
             <div className="flex flex-wrap items-center gap-2">
               <span className="tabular-nums">{e.result.score}</span><BandChip band={e.result.band} />
               <Button size="sm" variant="outline" asChild><Link to="/reports" search={{ id: e.id }}>Details</Link></Button>
-              {e.result.sampleId && <Button size="sm" variant="outline" asChild><Link to="/analyze" search={{ sample: e.result.sampleId }}>Re-run</Link></Button>}
+              <Button size="sm" variant="outline" asChild>
+                <Link to="/analyze" search={e.result.sampleId ? { sample: e.result.sampleId, url: undefined } : { sample: undefined, url: e.result.input }}>Re-run</Link>
+              </Button>
               <Button size="sm" variant="ghost" onClick={() => { if (window.confirm("Permanently delete this saved analysis?")) { try { deleteEntry(e.id); toast("Entry deleted"); } catch { toast.error("Could not delete entry"); } } }}>Delete</Button>
             </div>
           </div>

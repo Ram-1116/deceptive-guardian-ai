@@ -32,7 +32,7 @@ function Overview() {
   return (
     <>
       <PageHeader title="DeceptIQ security overview" subtitle="Web analysis/dashboard prototype by ThreatForge. Local URL rules and defined sample signals—not live browser monitoring."
-        actions={<Button asChild><Link to="/analyze" search={{ sample: undefined }}><ScanSearch /> Analyze URL</Link></Button>} />
+        actions={<Button asChild><Link to="/analyze" search={{ sample: undefined, url: undefined }}><ScanSearch /> Analyze URL</Link></Button>} />
       <section className="mb-6 border-y border-border py-4"><h2 className="text-sm font-semibold">Browser extension · planned separately</h2><p className="mt-1 text-sm text-muted-foreground">The intended Chrome/Chromium Manifest V3 extension would supply page signals. This web app is not installed in your browser, does not watch open tabs, and cannot block input.</p><Button asChild variant="link" className="mt-2 px-0"><Link to="/settings">View signal coverage & privacy</Link></Button></section>
       <div className="grid gap-4 sm:grid-cols-3">
         {[["Saved assessments (includes samples)", list.length], ["High / Critical findings", flagged], ["Illustrative scenario assessments", chains]].map(([l, v]) => (

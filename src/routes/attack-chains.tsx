@@ -53,7 +53,7 @@ function Chains() {
         <div className="flex flex-wrap gap-2">
           <Button variant="outline" disabled={i === 0} onClick={() => setI(i - 1)}>Previous</Button>
           <Button variant="outline" disabled={i === STAGES.length - 1} onClick={() => setI(i + 1)}>Next step</Button>
-          <Button asChild><Link to="/analyze" search={{ sample: "otp-scam" }}>Analyze this scam</Link></Button>
+          <Button asChild><Link to="/analyze" search={{ sample: "otp-scam", url: undefined }}>Analyze this scam</Link></Button>
         </div>
       </section>
     </>
