@@ -37,7 +37,7 @@ function Reports() {
   };
 
   if (!ready) return <p role="status" className="text-muted-foreground">Loading local reports…</p>;
-  if (!e) return <p className="text-muted-foreground">{id ? "This report is unavailable or was deleted." : "No saved analyses yet."} <Link to="/analyze" search={{ sample: undefined }} className="text-primary">Run an analysis</Link>.</p>;
+  if (!e) return <p className="text-muted-foreground">{id ? "This report is unavailable or was deleted." : "No saved analyses yet."} <Link to="/analyze" search={{ sample: undefined, url: undefined }} className="text-primary">Run an analysis</Link>.</p>;
   return (
     <>
       <PageHeader title="Incident report" subtitle={`${e.result.hostname} · ${new Date(e.result.analyzedAt).toLocaleString()}`}
